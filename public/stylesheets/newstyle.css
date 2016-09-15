@@ -1,0 +1,65 @@
+*{
+    color:#222222;
+    -webkit-box-sizing:border-box;
+    -moz-sizing:border-box;
+    box-sizing:border-box;
+}
+
+a{
+}
+
+#container{
+    min-width: 480px;
+    max-width: 1200px;
+    margin:10px auto;
+    padding:5px;
+}
+
+#header{
+    background:#cccccc;
+    padding: 10px 5px;
+}
+
+#header h1{
+    font-family:MakinasS5;
+    font-size:2.5em;
+    font-weight:normal;
+    margin:0;
+}
+
+#header h1 small{
+    font-family:inherit;
+    font-size:0.67em;
+}
+
+#main{
+    margin: 20px auto;
+    padding: 5px;
+    background:#dcdcdc;
+    overflow:hidden;
+}
+
+#messageList{
+	margin-top: 20px;
+}
+
+#messageList p{
+	padding: 10px;
+	margin: .25em 0;
+	background: #eeeeee;
+}
+
+#messageList p.myMessage{
+	background: #eeffee;
+}
+
+#messageList p h3{
+	margin: 0 0 .25em 0;
+}
+
+#footer{
+    clear:both;
+    margin:10px auto;
+    padding:5px;
+    border-top:solid 1px black;
+}

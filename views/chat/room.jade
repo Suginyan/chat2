@@ -1,0 +1,67 @@
+extends layout
+
+block head
+  script(type="text/javascript", src="http://localhost:8888/socket.io/socket.io.js")
+  script(type="text/javascript").
+    var socket, emit, username;
+    (function(){
+      socket = io.connect("http://localhost:8888");
+      emit = function(name,data){
+        socket.emit(name, JSON.stringify(data));
+      }
+    })();
+
+    window.onload = function(){
+      // usernameの取得
+      username = document.getElementById("username").innerHTML;
+      // sendボタン押下で送信
+      var sendBtn = document.getElementById('send');
+      sendBtn.addEventListener("click", function(){
+        emit('message', {user: username, text: message.value});
+        message.value="";
+      });
+      // Enterキーによる送信
+      var sendByEnter = document.getElementById('message');
+      sendByEnter.addEventListener("keydown", function(e){
+        if(e.keyCode == 13){
+          emit('message', {user: username, text: message.value});
+          message.value="";
+        }
+      })
+      socket.on('receiveMessage', function(d){
+        var data = JSON.parse(d);
+        var p = document.createElement('p');
+        var list = document.getElementById('messageList');
+        p.innerHTML = "<h3>"+data.user+"</h3>"+data.text;
+        if(data.user == username){// 自分のメッセージにはclass追加
+          p.classList.add('myMessage')
+        }
+        list.insertBefore(p, list.firstChild);
+      });
+      socket.on('receiveEntryMessage', function(d){
+        var data = JSON.parse(d);
+        var p = document.createElement('p');
+        var list = document.getElementById('messageList');
+        p.innerHTML = data.user + " が入室しました";
+        list.insertBefore(p, list.firstChild);
+      })
+      socket.on('receiveExitMessage', function(d){
+        var data = JSON.parse(d);
+        var p = document.createElement('p');
+        var list = document.getElementById('messageList');
+        p.innerHTML = data.user + " が退室しました";
+        list.insertBefore(p, list.firstChild);
+      })
+      emit('entryMessage',{user: username});
+    } // onload
+    window.onbeforeunload = function(){
+      emit('exitMessage', {user: username});
+      socket.disconnect();
+    }
+
+block content
+  h2(id="username") #{username}
+  div(id="sendArea")
+    input(id="message", type="text", size="30")
+    button(id="send", type="button") Send
+  div(id="messageList")
